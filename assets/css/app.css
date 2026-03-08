@@ -1,0 +1,928 @@
+/* =====================================================
+   GestionSalles CI — Feuille de styles principale
+   Design : Dashboard moderne avec mode clair/sombre
+   ===================================================== */
+
+/* =====================================================
+   VARIABLES CSS — Les couleurs et tailles réutilisables
+   
+   💡 ANALOGIE : C'est comme des variables en JavaScript
+   On définit une fois, on utilise partout avec var(--nom)
+   ===================================================== */
+:root {
+    /* Palette principale */
+    --primary:      #6366f1;      /* Indigo moderne */
+    --primary-dark: #4f46e5;
+    --primary-light: #818cf8;
+    --success:      #10b981;      /* Vert */
+    --danger:       #ef4444;      /* Rouge */
+    --warning:      #f59e0b;      /* Orange */
+    --info:         #3b82f6;      /* Bleu */
+
+    /* Mode CLAIR (par défaut) */
+    --bg-primary:   #ffffff;      /* Fond des cartes */
+    --bg-secondary: #f9fafb;      /* Fond de la page */
+    --bg-sidebar:   #1f2937;      /* Sidebar sombre */
+    --text-primary: #111827;      /* Texte principal */
+    --text-secondary: #6b7280;    /* Texte secondaire */
+    --border:       #e5e7eb;      /* Bordures */
+    
+    /* Dimensions */
+    --sidebar-width:  280px;
+    --topbar-height:  70px;
+    --radius:         12px;
+    --radius-sm:      8px;
+    --shadow:         0 1px 3px rgba(0,0,0,0.1);
+    --shadow-lg:      0 10px 25px rgba(0,0,0,0.1);
+    
+    /* Transitions */
+    --transition:     all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =====================================================
+   MODE SOMBRE — Quand on ajoute .dark-mode sur <body>
+   
+   💡 ANALOGIE : Comme un interrupteur qui change toutes
+   les couleurs d'un coup !
+   ===================================================== */
+body.dark-mode {
+    --bg-primary:     #1f2937;
+    --bg-secondary:   #111827;
+    --bg-sidebar:     #0f172a;
+    --text-primary:   #f9fafb;
+    --text-secondary: #9ca3af;
+    --border:         #374151;
+}
+
+/* =====================================================
+   RESET & BASE
+   ===================================================== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    transition: var(--transition);
+}
+
+/* =====================================================
+   SIDEBAR — Navigation latérale
+   ===================================================== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--bg-sidebar);
+    color: white;
+    padding: 1.5rem;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+    box-shadow: var(--shadow-lg);
+}
+
+/* Sur mobile, la sidebar est cachée par défaut */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    /* Quand on ajoute .open, elle apparaît */
+    .sidebar.open {
+        transform: translateX(0);
+    }
+}
+
+/* Logo de l'application */
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 1.5rem;
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.logo-text {
+    flex: 1;
+}
+
+.logo-name {
+    display: block;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: white;
+}
+
+.logo-sub {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+}
+
+/* Carte utilisateur */
+.user-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-role {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 50px;
+    margin-top: 0.25rem;
+}
+
+.role-admin      { background: rgba(239,68,68,0.2); color: #fca5a5; }
+.role-enseignant { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+.role-etudiant   { background: rgba(59,130,246,0.2); color: #93c5fd; }
+
+/* Navigation */
+.nav-section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.4);
+    margin: 1.5rem 0 0.5rem;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+}
+
+.sidebar-nav li {
+    margin-bottom: 0.25rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+.nav-link.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(99,102,241,0.4);
+}
+
+.nav-link-danger {
+    color: rgba(239,68,68,0.8) !important;
+}
+
+.nav-link-danger:hover {
+    background: rgba(239,68,68,0.1) !important;
+    color: #ef4444 !important;
+}
+
+.nav-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+/* =====================================================
+   ZONE PRINCIPALE
+   ===================================================== */
+.main-content {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+/* =====================================================
+   TOPBAR — Barre du haut
+   ===================================================== */
+.topbar {
+    height: var(--topbar-height);
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    gap: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: var(--shadow);
+}
+
+.burger-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-primary);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.burger-btn:hover {
+    background: var(--bg-secondary);
+}
+
+@media (max-width: 768px) {
+    .burger-btn {
+        display: block;
+    }
+}
+
+.page-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Bouton toggle mode sombre */
+.theme-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: var(--transition);
+}
+
+.theme-toggle:hover {
+    background: var(--border);
+    transform: scale(1.1);
+}
+
+.topbar-date {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .topbar-date {
+        display: block;
+    }
+}
+
+/* =====================================================
+   CONTENU DE LA PAGE
+   ===================================================== */
+.page-content {
+    flex: 1;
+    padding: 2rem;
+}
+
+@media (max-width: 768px) {
+    .page-content {
+        padding: 1rem;
+    }
+}
+
+/* =====================================================
+   CARTES STATISTIQUES
+   ===================================================== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.icon-primary { background: rgba(99,102,241,0.1); color: var(--primary); }
+.icon-success { background: rgba(16,185,129,0.1); color: var(--success); }
+.icon-warning { background: rgba(245,158,11,0.1); color: var(--warning); }
+.icon-danger  { background: rgba(239,68,68,0.1); color: var(--danger); }
+.icon-info    { background: rgba(59,130,246,0.1); color: var(--info); }
+
+.stat-body {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.stat-change {
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.change-up   { color: var(--success); }
+.change-down { color: var(--danger); }
+
+/* =====================================================
+   CARTES GÉNÉRALES
+   ===================================================== */
+.card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =====================================================
+   TABLEAUX
+   ===================================================== */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+thead th {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border);
+}
+
+tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+tbody tr:hover {
+    background: var(--bg-secondary);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* =====================================================
+   BADGES
+   ===================================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-primary { background: rgba(99,102,241,0.1); color: var(--primary); }
+.badge-success { background: rgba(16,185,129,0.1); color: var(--success); }
+.badge-warning { background: rgba(245,158,11,0.1); color: var(--warning); }
+.badge-danger  { background: rgba(239,68,68,0.1); color: var(--danger); }
+.badge-info    { background: rgba(59,130,246,0.1); color: var(--info); }
+.badge-gray    { background: var(--bg-secondary); color: var(--text-secondary); }
+
+/* =====================================================
+   PAGE D'AUTHENTIFICATION
+   ===================================================== */
+.auth-page {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--bg-secondary);
+}
+
+@media (max-width: 968px) {
+    .auth-page {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Panneau gauche décoratif */
+.auth-visual {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+@media (max-width: 968px) {
+    .auth-visual {
+        display: none;
+    }
+}
+
+.auth-visual::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    top: -100px;
+    left: -100px;
+}
+
+.auth-visual-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+    max-width: 400px;
+}
+
+.auth-visual-icon {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+}
+
+.auth-visual h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.auth-visual p {
+    color: rgba(255,255,255,0.8);
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+.auth-features {
+    display: grid;
+    gap: 1rem;
+    margin-top: 3rem;
+}
+
+.auth-feature {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255,255,255,0.1);
+    padding: 1rem;
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    text-align: left;
+}
+
+.auth-feature i {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+/* Panneau droit : formulaires */
+.auth-forms {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    background: var(--bg-primary);
+}
+
+@media (max-width: 480px) {
+    .auth-forms {
+        padding: 2rem 1rem;
+    }
+}
+
+.auth-slider {
+    width: 100%;
+    max-width: 450px;
+    overflow: hidden;
+}
+
+/* Tabs */
+.auth-tabs {
+    display: flex;
+    gap: 0.5rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+    padding: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+@media (max-width: 480px) {
+    .auth-tab {
+        font-size: 0.85rem;
+        padding: 0.6rem;
+    }
+    
+    .auth-tab i {
+        display: none;
+    }
+}
+
+.auth-tab.active {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    box-shadow: var(--shadow);
+}
+
+/* Panneaux glissants */
+.auth-panels {
+    display: flex;
+    width: 200%;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-panels.show-register {
+    transform: translateX(-50%);
+}
+
+.auth-panel {
+    width: 50%;
+    flex-shrink: 0;
+    padding: 0 0.5rem;
+}
+
+/* Formulaires */
+.auth-form .form-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.auth-form .form-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    outline: none;
+    transition: var(--transition);
+}
+
+.form-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.btn-auth {
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 0.5rem;
+}
+
+.btn-auth:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99,102,241,0.3);
+}
+
+/* Alertes */
+.alert-auth {
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    display: none;
+    border-left: 4px solid;
+}
+
+.alert-auth.visible {
+    display: block;
+}
+
+.alert-auth.erreur {
+    background: rgba(239,68,68,0.1);
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+.alert-auth.succes {
+    background: rgba(16,185,129,0.1);
+    color: var(--success);
+    border-color: var(--success);
+}
+
+/* =====================================================
+   GRILLE DES SALLES
+   ===================================================== */
+.salles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.salle-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.salle-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.salle-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.salle-nom {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+}
+
+.salle-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.salle-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.salle-detail i {
+    width: 20px;
+    text-align: center;
+    color: var(--primary);
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+.app-footer {
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-left: var(--sidebar-width);
+    transition: margin-left 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .app-footer {
+        margin-left: 0;
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+}
+
+/* =====================================================
+   OVERLAY MOBILE — Fond sombre quand sidebar ouverte
+   ===================================================== */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* =====================================================
+   UTILITAIRES
+   ===================================================== */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
